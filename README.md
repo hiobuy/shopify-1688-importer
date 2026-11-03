@@ -70,6 +70,8 @@ The CLI writes the Client ID into `shopify.app.toml` and the key, secret, and tu
 
 **4. Connect HIOBuy**
 
+Register as a developer and create an API key at [developers.hiobuy.com](https://developers.hiobuy.com/). The public API reference is at [hiobuy.com/api-docs](https://hiobuy.com/api-docs).
+
 In the app, open **Settings**. Paste a HIOBuy production API key (`hio_live_…`) and choose **Save and test connection**. During a trial, that key uses the same public production product API. The currency follows your Shopify store. If the store does not sell in CNY, set the exchange rate before the first import.
 
 This demo still recognizes an older `hio_test_…` key shape. Drafts created with that key are labeled in the app, and Active import is blocked for them. That label is a local safeguard. It is not a current HIOBuy Sandbox API. New development should use a production key. Automated tests in this repository use local synthetic fixtures, which are also not HIOBuy product data.
@@ -142,6 +144,8 @@ Details and the latest command results are in [docs/VERIFICATION.md](docs/VERIFI
 
 ## Documentation
 
+- [HIOBuy API docs](https://hiobuy.com/api-docs)
+- [Register and create a HIOBuy API key](https://developers.hiobuy.com/)
 - [Setup and deployment](docs/SETUP.md)
 - [Architecture and security boundaries](docs/ARCHITECTURE.md)
 - [Public API integration and Shopify mapping](docs/API-INTEGRATION.md)

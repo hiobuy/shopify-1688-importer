@@ -1,6 +1,25 @@
-# Verification report — 2026-10-18
+# Verification report
 
-This report separates local implementation evidence from live account acceptance. Shopify and HIOBuy credentials were not supplied; the user explicitly selected placeholder app configuration.
+Manual testing has imported a real 1688 product into Shopify. Commerce AI translation and image tools are part of the app and call HIOBuy's public Credits API. AI Credits are billed separately from product API quota. The sections below separate that manual result from automated checks. Automation does not re-run a live import or spend Credits.
+
+## Release preparation — 2026-11-02
+
+| Check | Result |
+| --- | --- |
+| Real 1688 product imported into Shopify | **Confirmed manually** by the maintainer on a configured Shopify app, HIOBuy production key, and development store. Not an automated test. Not every media, quota, Active, or sales-channel case was exercised. |
+| Commerce AI translation and image processing | **Implemented** on public Commerce AI V1. Tasks are estimated, then billed in AI Credits. Text is applied after preview. Image replacement waits for confirmation. Automated tests do not call the live Credits API. Provider rate limits and missing result files remain possible and are surfaced in the editor. |
+| `npm run typecheck` | Passed |
+| `npm test` | Passed: 69 tests, 3 files, Vitest 5.0.5 |
+| `npm run build` | Passed. React Router printed v8 future-flag advisories. Empty client chunks for resource routes are expected. |
+| `npm run check:security` | Passed. One local commit was scanned. No Shopify secret, HIOBuy key, private key, or cloud credential pattern was found. `client_id` in that commit is empty. `.env` and SQLite files are not tracked. |
+| `npm run check:licenses` | Passed for 408 locked package versions |
+| `npm audit --omit=dev` | Passed after locking transitive `body-parser` at 1.20.9, inside Express's existing `~1.20.5` range. The previous 1.20.8 lock matched GHSA-27r3-jxmh-p828. |
+| Docker image build and restart | **Not verified** in this pass |
+| GitHub Actions on `hiobuy/shopify-1688-importer` | **Not verified** in this pass. The workflow file is present. This documentation update was not pushed. |
+
+## Historical local checks — 2026-10-18
+
+The notes below are the first local implementation pass. They predate the confirmed manual import. Where they say live import or publication had not happened, use the 2026-11-02 section instead.
 
 ## Completed local checks
 
@@ -34,13 +53,14 @@ Earlier audit findings in test/build tooling and Prisma's config dependency were
 
 Dependency inventory is metadata-based, not a legal opinion. Upstream LICENSE/NOTICE files remain in their packages. The local scanner is a bounded pattern check, not a guarantee against every possible secret. No commercial Git history was copied into this new repository.
 
-## Not verified externally
+## Still not verified
 
-- Actual installation/token exchange, refreshed offline sessions and signed webhook delivery for the user's independent Shopify app.
-- A real HIOBuy account's subscription, 1688 authorization, image-search permissions, optional product fields, request IDs and quota behavior.
-- A real development-store product with remote images, uploaded PNG/JPEG/WebP, multiple options, variant image association, cover/order and Draft/Active status.
-- Real media processing latency, Shopify throttling and live ambiguous-outcome recovery.
-- Docker Linux image build, container startup, restart and persistent volume behavior: the local Docker CLI is present but its daemon was unavailable.
-- GitHub Actions: the workflow is included but the repository has not been pushed, published or run remotely.
+These items were not established by the 2026-10-18 local suite, and the 2026-11-02 pass did not turn them into automated results. The successful manual import does not close them.
 
-Use the acceptance checklist in SETUP.md after configuring legal credentials. The commercial project was left unchanged. No Git commit, push, public repository creation or production deployment was performed.
+- Signed webhook delivery, token refresh, and a full reinstall of a brand-new Shopify app created from this repository by someone else.
+- Every HIOBuy quota, image-search permission, and optional product-field combination.
+- Every media-processing delay, Shopify throttle, and ambiguous `productSet` outcome.
+- Docker image build, container restart, and SQLite volume persistence.
+- A green GitHub Actions run.
+
+Use the acceptance checklist in SETUP.md on your own store. Do not treat synthetic fixtures as 1688 products.

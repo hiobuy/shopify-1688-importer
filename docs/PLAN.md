@@ -1,5 +1,7 @@
 # Inspection and implementation plan — 2026-10-18
 
+This file is the original plan. The app that was built is a working importer: real 1688 products can be imported into Shopify, and Commerce AI calls the public Credits API. HIOBuy no longer provides a separate Sandbox API. Prefer `hio_live_…`. Current behavior is documented in the README and [API-INTEGRATION.md](API-INTEGRATION.md). The notes below are historical and are not instructions to mock imports or AI.
+
 The destination was empty and was not a Git repository. The supplied HTML v6 prototype was inspected for discovery, product modal, four editor tabs, jobs, settings, and history. Its sample-only behavior is a visual reference, not an instruction to simulate core imports. The old commercial project was inspected read-only: React Router 7, React, App Bridge, official Shopify authentication, Drizzle/D1, internal AI and billing. No old source, secrets, assets, database, or configuration has been copied.
 
 Use React Router 7, TypeScript, official Shopify React Router auth/App Bridge, Prisma SQLite sessions and data, encrypted credentials, Node 24 Docker. The Node database adapter replaces the old platform-specific D1 deployment because the destination is empty and this demo must support independent Docker hosting. Follow the official Shopify MIT template for authentication scaffolding, retaining its notice.
@@ -17,13 +19,10 @@ Use React Router 7, TypeScript, official Shopify React Router auth/App Bridge, P
 - https://hiobuy.com/en/api-docs/product-upload-image
 - https://hiobuy.com/en/api-docs/product-image-search
 - https://hiobuy.com/en/api-docs/authentication
-- https://hiobuy.com/en/api-docs/sandbox
 - https://shopify.dev/docs/api/shopify-app-react-router/latest
 - https://shopify.dev/docs/api/admin-graphql/2026-10/mutations/productSet
 - https://shopify.dev/docs/api/admin-graphql/2026-10/input-objects/ProductSetIdentifiers
 - https://shopify.dev/docs/api/admin-graphql/2026-10/input-objects/ProductVariantSetInput
 - https://github.com/Shopify/shopify-app-template-react-router (MIT)
 
-HIOBuy public AI endpoints for these editor operations are unavailable; only mock them. Product API fields have varying optional availability; never invent costs, inventory, translations or supplier metadata. Existing subscription/channel authorizations apply. Sandbox shares the public origin and is selected by a test key; visibly label snapshots and prohibit ACTIVE imports of sandbox data.
-
-Independent Shopify app credentials and HIOBuy key were not supplied. Use placeholders as the user confirmed. Live OAuth and end-to-end store acceptance remain pending configuration. No GitHub publication, production deployment, or commercial project modification is authorized.
+Product API fields have varying optional availability; never invent costs, inventory, translations, or supplier metadata. Existing subscription and channel authorizations apply. The shipped AI adapter calls public Commerce AI V1 instead of the mock-only approach first written here. `hio_test_…` drafts remain labeled and cannot be imported as Active. That is a local safeguard, not the discontinued HIOBuy Sandbox API.

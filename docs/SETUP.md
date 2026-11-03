@@ -71,8 +71,8 @@ Save the key in **Settings → HIOBuy**. The saved key is encrypted with AES-256
 
 Both key types use `https://api.hiobuy.com`:
 
-- `hio_test_…`: documented Sandbox simulations/fixtures, visibly labeled. A real Shopify Draft can be created from them; Active is blocked server-side.
-- `hio_live_…`: production HIOBuy product requests with your own account permissions and subscription quota. Commerce AI uses the same key when that app has a prepaid AI account.
+- `hio_live_…`: the public production API. Trial and paid keys both return real 1688 product data, subject to your authorization and quota. Commerce AI uses the same key when that app has a prepaid AI account. Credits are billed separately from product API quota.
+- `hio_test_…`: still recognized by this demo. Drafts are labeled, and Active import is blocked. HIOBuy no longer offers a separate Sandbox API. Do not treat this key shape, or the synthetic fixtures under `tests/`, as official sandbox product data. New setups should use `hio_live_…`.
 
 **Test connection** performs a real `products/search` request. It verifies 1688 search access; it does not certify separate image-search permissions. A 403 or quota response is shown honestly. A newly entered key is saved first. Do not send keys to support; send the public endpoint, returned code and request ID.
 
@@ -89,11 +89,11 @@ Use a development store and a permitted production HIOBuy key to validate:
 5. Select a few SKU combinations and images, edit option labels and prices, then import as Draft.
 6. If Shopify is still processing images, the app waits and finishes the import automatically. Confirm a single Shopify product ID across attempts.
 7. Inspect the real Shopify product: fields, manual collections, attributes appended to description, options, variants, SKU images, image order/cover and prices.
-8. Test Active using a suitable non-Sandbox product. Select sales channels in Shopify Admin separately.
+8. Test Active with a product loaded through an `hio_live_…` key. Select sales channels in Shopify Admin separately.
 9. In Settings, choose **Find AI account** under Commerce AI. The app looks up the prepaid account from the saved API key and shows the balance; there is nothing to copy. If no account exists yet, create it in HIOBuy Developer Center → AI Enhancement first. Translate a title, preview the result and apply it only if it is right. Image tools need an approved HTTPS image URL; local uploads are not sent.
 10. Reopen an import as a new draft. The UI explains that importing that new draft creates a separate product.
 
-Record actual request IDs and Shopify product IDs privately. No real-account acceptance was run during initial implementation because credentials were not supplied.
+Record request IDs and Shopify product IDs privately. A later manual run confirmed that a real 1688 product can be imported into Shopify. That run is not an automated suite and does not cover every failure mode. See [VERIFICATION.md](VERIFICATION.md).
 
 ## Docker deployment
 

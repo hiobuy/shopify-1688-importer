@@ -47,7 +47,7 @@ The database itself is not wholly encrypted: normalized product content and requ
 
 The entire editor model is owned by the parent workbench; changing panels cannot discard edits. Autosave debounces for 900 ms and serializes in-flight saves. Optimistic version comparison rejects competing tabs. Navigation and browser-close guards warn if edits have not been saved. Import waits for pending saves. Invalid fields produce an error while local edits remain visible; only valid data is saved. Import snapshots cannot be edited in place.
 
-Sanitization runs server-side before storing and publishing descriptions. Preview runs in a sandboxed iframe with a restrictive document CSP and no script permission. Edited attributes are escaped and appended to the Shopify description as a Product details table. Original source descriptions and attributes remain separately inspectable.
+Sanitization runs in the description editor before HTML is kept, and again on the server before storing and publishing. Script, style, and iframe tags are removed. Description images are given `referrerpolicy="no-referrer"` so supplier CDNs that check the referrer can load. Edited attributes are escaped and appended to the Shopify description as a Product details table. Original source descriptions and attributes remain separately inspectable.
 
 ## Publishing and recovery
 

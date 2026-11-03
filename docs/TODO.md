@@ -7,11 +7,11 @@
 - Product detail dialog and supplier link. Four editor tabs; source title/attributes/description; editable title/type/vendor/manual collections/tags/SEO; rich-text description; SKU selection, shared option names and per-variant values, cost display, manual currency/rate/multiplier/rounding and batch pricing; image ordering, cover, exclusion, alt text, upload and visual SKU picture selection.
 - Database persistence, debounce/serialized autosave, version conflicts, navigation guards, immutable import snapshots and per-shop ownership.
 - Real Shopify GraphQL publishing service, Draft/Active, options and variants, ordered image files and variant image mapping, staged local uploads, media readiness checks, product ID storage, errors, locked duplicate submissions and deterministic-handle safe retry.
-- Settings, key rotation/removal, real connection test, environment labels and server-side restriction on Active Sandbox imports.
+- Settings, key rotation/removal, real connection test, environment labels, and a server-side block on Active import for drafts created with an `hio_test_…` key.
 - Persisted import history, detail, Shopify product link, safe retry and explicit re-edit as a separate new draft/product.
 - Node/Docker source, committed SQLite migration, environment example, MIT/Shopify attribution, dependency license inventory, tests and security scanner.
 
-These are implemented code paths. Their live account acceptance is a separate pending item below; synthetic transports do not prove real external integration.
+These paths are implemented. Manual testing has imported a real 1688 product into Shopify. Automated tests still use stand-in HTTP and synthetic fixtures, so they do not by themselves prove every live account or edge case.
 
 ## 2. Commerce AI
 
@@ -37,8 +37,8 @@ These are implemented code paths. Their live account acceptance is a separate pe
 
 ## 5. Unresolved acceptance items and current limits
 
-- **Live credentials were not supplied.** Complete the documented development-store acceptance flow: OAuth installation, real HIOBuy search/image/detail, real Shopify media, multi-option variants, cover/order and Draft/Active results. Current tests use a controlled GraphQL transport and synthetic fixtures.
-- The runtime dependency audit is clean. The complete development dependency audit reports four moderate entries caused by one upstream `sprintf-js` advisory through Shopify CLI 4.9.4 → global-agent → roarr. No patched sprintf-js release was available in the inspected registry; do not blindly force a Shopify CLI downgrade. These tools are excluded from the Docker runtime. Details are in VERIFICATION.md.
+- Manual testing confirmed a real 1688 product import into Shopify. It did not exhaust media failures, quota errors, every Active/sales-channel combination, or Docker hosting. Automated tests still use a controlled GraphQL transport and synthetic fixtures.
+- The runtime audit is clean after locking transitive `body-parser` at 1.20.9. The development-tree audit still reports four moderate entries from one upstream `sprintf-js` advisory through Shopify CLI 4.9.4 → global-agent → roarr. No patched sprintf-js release was available in the inspected registry; do not blindly force a Shopify CLI downgrade. Shopify CLI is excluded from the Docker runtime. Details are in VERIFICATION.md.
 - Docker CLI is installed locally, but its daemon was unavailable during initial validation. The image/Compose files are provided; a real Linux image build and restart/persistence smoke test remain pending unless the verification report records a later successful check.
 - This synchronous demo limits imports to 100 selected variants, 3 dimensions and 50 selected images. More than 3 source dimensions cannot be drafted; larger selected sets need reducing or an asynchronous bulk implementation.
 - Supplier stock is informational and Shopify inventory is untracked. There is no inventory/location sync, fulfillment, tax, shipping or procurement flow.

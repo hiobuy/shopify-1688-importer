@@ -15,7 +15,7 @@ Image search uploads once and reuses image_id for pagination. Browser and server
 
 CNY catalog prices are major yuan units. Prefer `promotion_amount`, including zero, then `display_amount`, then `original_amount`; missing values remain unavailable. Source variants use `sku_id` identity; option dimensions prefer `prop_id` and fall back to original names. Localized labels are editable display data, not guessed attribute semantics. Missing translations, supplier metadata, stock or media are not fabricated.
 
-Each draft preserves the key's environment at creation. Sandbox and Production use the same origin; `hio_test_…` requests receive documented fixture/simulated data. Existing drafts do not become production data after key rotation. Active imports of Sandbox snapshots are blocked.
+Each draft stores the key environment from when it was created. `hio_live_…` calls the public production API and returns real 1688 products, including during a trial. `hio_test_…` is still stored as a separate environment: those drafts stay labeled, and Active import is blocked. HIOBuy has discontinued its former Sandbox API, so a test-key draft is not an official sandbox catalog. Rotating the key does not rewrite an existing draft into production data. Local automated tests use synthetic fixtures in `tests/fixtures.ts`. Those fixtures are not HIOBuy responses.
 
 No request is automatically retried against HIOBuy: billable operations can consume quota even if a response is lost. The UI presents a curated message and bounded public code/request ID. Raw upstream error messages and credentials are not reflected. Subscription access, 1688 channel authorization, image-search entitlement and quota are decided by HIOBuy, not this demo.
 
@@ -85,7 +85,7 @@ Contracts were inspected against the public pages/spec, not inferred from the co
 - [Product detail](https://hiobuy.com/en/api-docs/product-detail)
 - [Image upload](https://hiobuy.com/en/api-docs/product-upload-image)
 - [Image search](https://hiobuy.com/en/api-docs/product-image-search)
-- [Authentication](https://hiobuy.com/en/api-docs/authentication) and [Sandbox](https://hiobuy.com/en/api-docs/sandbox)
+- [Authentication](https://hiobuy.com/en/api-docs/authentication)
 - [Shopify React Router package](https://shopify.dev/docs/api/shopify-app-react-router/latest)
 - [productSet](https://shopify.dev/docs/api/admin-graphql/2026-10/mutations/productSet), [ProductSetIdentifiers](https://shopify.dev/docs/api/admin-graphql/2026-10/input-objects/ProductSetIdentifiers)
 - [ProductVariantSetInput](https://shopify.dev/docs/api/admin-graphql/2026-10/input-objects/ProductVariantSetInput), [FileSetInput](https://shopify.dev/docs/api/admin-graphql/2026-10/input-objects/FileSetInput)

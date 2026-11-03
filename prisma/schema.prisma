@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+model Session {
+  id String @id
+  shop String
+  state String
+  isOnline Boolean @default(false)
+  scope String?
+  expires DateTime?
+  accessToken String
+  userId BigInt?
+  firstName String?
+  lastName String?
+  email String?
+  accountOwner Boolean @default(false)
+  locale String?
+  collaborator Boolean? @default(false)
+  emailVerified Boolean? @default(false)
+  refreshToken String?
+  refreshTokenExpires DateTime?
+  @@index([shop])
+}
+model ShopSettings {
+  shop String @id
+  apiKeyEncrypted String?
+  keyConfigured Boolean @default(false)
+  environment String @default("unconfigured")
+  currency String @default("USD")
+  exchangeRate String @default("0.14")
+  multiplier String @default("2.5")
+  rounding String @default("two_decimals")
+  publishStatus String @default("DRAFT")
+  aiShopDomain String?
+  updatedAt DateTime @updatedAt
+}
+model Draft {
+  id String @id @default(uuid())
+  shop String
+  sourceId String
+  sourceUrl String
+  environment String
+  sourceJson String
+  editorJson String
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imports ImportRecord[]
+  jobs AiJob[]
+  assets Asset[]
+  @@index([shop, updatedAt])
+}
+model ImportRecord {
+  id String @id @default(uuid())
+  shop String
+  draftId String @unique
+  draft Draft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  sourceId String
+  sourceUrl String
+  sourcePlatform String @default("1688")
+  title String
+  status String @default("PENDING")
+  publishStatus String
+  productId String?
+  productHandle String @unique
+  error String?
+  warnings String?
+  attempts Int @default(0)
+  lockedAt DateTime?
+  lockToken String?
+  snapshotJson String
+  filesJson String @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([shop, createdAt])
+}
+model AiJob {
+  id String @id @default(uuid())
+  shop String
+  draftId String
+  draft Draft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  provider String @default("mock")
+  capability String
+  status String @default("QUEUED")
+  inputJson String
+  resultJson String?
+  error String?
+  shouldFail Boolean @default(false)
+  attempts Int @default(1)
+  applied Boolean @default(false)
+  readyAt DateTime
+  idempotencyKey String? @unique
+  aiAccount String?
+  remoteJobId String?
+  requestJson String?
+  nextPollAt DateTime?
+  errorCode String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([shop, status])
+}
+model Asset {
+  id String @id @default(uuid())
+  shop String
+  draftId String
+  draft Draft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  mime String
+  filename String
+  data Bytes
+  createdAt DateTime @default(now())
+  @@index([shop, draftId])
+}

@@ -1,0 +1,21 @@
+node_modules/
+build/
+.react-router/
+.shopify/
+.env
+.env.*
+!.env.example
+*.sqlite*
+*.db*
+data/
+coverage/
+test-results/
+playwright-report/
+.DS_Store
+*.log
+*.pem
+*.key
+artifacts/
+# Keep these required source files visible even with broad global ignore rules.
+!.gitignore
+!prisma/migrations/**/*.sql

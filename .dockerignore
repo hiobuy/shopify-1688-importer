@@ -1,0 +1,17 @@
+node_modules
+build
+.git
+.env
+.env.*
+!.env.example
+*.log
+**/*.sqlite*
+**/*.db*
+data
+artifacts
+coverage
+test-results
+playwright-report
+.shopify
+.react-router
+.DS_Store

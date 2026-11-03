@@ -1,0 +1,27 @@
+name: Validate
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: file:./dev.sqlite
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run setup
+      - run: npm run check
+      - run: npm run test:smoke
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:visual
+      - run: npm audit --omit=dev --registry=https://registry.npmjs.org
+      - run: docker build -t hiobuy-importer-ci .
